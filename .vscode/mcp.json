@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "sonarqube": {
+      "command": "node",
+      "args": ["./dist/index.js"],
+      "env": {
+        "SONARQUBE_URL": "http://localhost:9000",
+        "SONARQUBE_TOKEN": "your-sonarqube-token-here"
+      }
+    }
+  }
+}
