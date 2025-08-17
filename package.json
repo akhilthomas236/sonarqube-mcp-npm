@@ -1,11 +1,25 @@
 {
-  "name": "sonarqube-mcp",
+  "name": "mcp-sonarqube",
   "version": "1.0.0",
   "description": "SonarQube Model Context Protocol (MCP) Server - AI-powered code quality analysis",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "sonarqube-mcp": "dist/index.js"
+    "mcp-sonarqube": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akhilthomas236/sonarqube-mcp-npm.git"
+  },
+  "homepage": "https://github.com/akhilthomas236/sonarqube-mcp-npm#readme",
+  "bugs": {
+    "url": "https://github.com/akhilthomas236/sonarqube-mcp-npm/issues"
   },
   "scripts": {
     "build": "tsc",
@@ -21,10 +35,18 @@
     "model-context-protocol",
     "code-quality",
     "ai",
+    "copilot",
     "static-analysis",
-    "typescript"
+    "typescript",
+    "security",
+    "vulnerability",
+    "quality-gate",
+    "technical-debt"
   ],
-  "author": "Development Team",
+  "author": {
+    "name": "Development Team",
+    "url": "https://github.com/akhilthomas236"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
