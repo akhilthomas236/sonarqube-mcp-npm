@@ -2,6 +2,9 @@
 
 A Model Context Protocol (MCP) server that provides AI assistants with access to SonarQube code quality, security, and project analytics data.
 
+[![npm version](https://badge.fury.io/js/mcp-sonarqube.svg)](https://www.npmjs.com/package/mcp-sonarqube)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Features
 
 - **Project Listing**: Get comprehensive project information with quality metrics
@@ -13,9 +16,21 @@ A Model Context Protocol (MCP) server that provides AI assistants with access to
 
 ## Installation
 
+### npm (Recommended)
+
+```bash
+# Global installation
+npm install -g mcp-sonarqube
+
+# Local installation in your project
+npm install mcp-sonarqube
+```
+
+### From Source
+
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/akhilthomas236/sonarqube-mcp-npm.git
 cd sonarqube-mcp
 ```
 
@@ -29,13 +44,48 @@ npm install
 npm run build
 ```
 
-## Configuration
+## Quick Start
 
-Set the following environment variables:
+### 1. Install the package
+```bash
+npm install -g mcp-sonarqube
+```
 
+### 2. Set up environment variables
 ```bash
 export SONARQUBE_URL="http://your-sonarqube-instance:9000"
 export SONARQUBE_TOKEN="your-sonarqube-token"
+```
+
+### 3. Run as MCP Server
+```bash
+mcp-sonarqube
+```
+
+### 4. VS Code Integration
+
+Create `.vscode/mcp.json` in your workspace:
+
+```json
+{
+  "servers": {
+    "sonarqube": {
+      "command": "npx",
+      "args": ["mcp-sonarqube"],
+      "env": {
+        "SONARQUBE_URL": "http://localhost:9000",
+        "SONARQUBE_TOKEN": "your-sonarqube-token-here"
+      }
+    }
+  }
+}
+```
+
+Then use with GitHub Copilot:
+```
+@copilot List all projects in our SonarQube instance
+@copilot Show me quality metrics for project "my-app"
+@copilot What are the critical security vulnerabilities in project "api-service"?
 ```
 
 ### Getting a SonarQube Token
@@ -154,13 +204,47 @@ src/
 
 To use this MCP server with VS Code and Copilot:
 
+### Method 1: Using npx (Recommended)
 1. Create `.vscode/mcp.json` in your workspace:
 ```json
 {
   "servers": {
     "sonarqube": {
+      "command": "npx",
+      "args": ["mcp-sonarqube"],
+      "env": {
+        "SONARQUBE_URL": "http://localhost:9000",
+        "SONARQUBE_TOKEN": "your-token-here"
+      }
+    }
+  }
+}
+```
+
+### Method 2: Using local installation
+If you have the package installed locally:
+```json
+{
+  "servers": {
+    "sonarqube": {
       "command": "node",
-      "args": ["./dist/index.js"],
+      "args": ["./node_modules/mcp-sonarqube/dist/index.js"],
+      "env": {
+        "SONARQUBE_URL": "http://localhost:9000",
+        "SONARQUBE_TOKEN": "your-token-here"
+      }
+    }
+  }
+}
+```
+
+### Method 3: Global installation
+If you have the package installed globally:
+```json
+{
+  "servers": {
+    "sonarqube": {
+      "command": "mcp-sonarqube",
       "env": {
         "SONARQUBE_URL": "http://localhost:9000",
         "SONARQUBE_TOKEN": "your-token-here"
@@ -221,6 +305,13 @@ The server provides detailed error messages for common issues:
 
 MIT License - see LICENSE file for details
 
+## Links
+
+- **npm Package**: https://www.npmjs.com/package/mcp-sonarqube
+- **GitHub Repository**: https://github.com/akhilthomas236/sonarqube-mcp-npm
+- **SonarQube Documentation**: https://docs.sonarqube.org/
+- **Model Context Protocol**: https://modelcontextprotocol.io/
+
 ## Support
 
 For issues and questions:
@@ -228,3 +319,4 @@ For issues and questions:
 2. Verify your token permissions
 3. Ensure network connectivity to SonarQube
 4. Check the server logs for detailed error messages
+5. Create an issue on [GitHub](https://github.com/akhilthomas236/sonarqube-mcp-npm/issues)
