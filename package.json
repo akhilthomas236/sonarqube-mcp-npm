@@ -1,6 +1,6 @@
 {
   "name": "mcp-sonarqube",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SonarQube Model Context Protocol (MCP) Server - AI-powered code quality analysis",
   "main": "dist/index.js",
   "type": "module",
