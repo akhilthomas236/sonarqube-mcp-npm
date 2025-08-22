@@ -222,10 +222,8 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-// Start the server
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch((error) => {
-    console.error('Unhandled error:', error);
-    process.exit(1);
-  });
-}
+// Start the server - always start when this file is executed
+main().catch((error) => {
+  console.error('Unhandled error:', error);
+  process.exit(1);
+});
