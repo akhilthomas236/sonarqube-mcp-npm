@@ -97,12 +97,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const client = createSonarQubeClient();
         const result = await listProjects(client, args || {});
         return {
-          content: [
-            {
-              type: 'text',
-              text: result.content,
-            },
-          ],
+          content: result.content,
         };
       }
 
@@ -113,12 +108,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const client = createSonarQubeClient();
         const result = await getProjectMetrics(client, args);
         return {
-          content: [
-            {
-              type: 'text',
-              text: result.content,
-            },
-          ],
+          content: result.content,
         };
       }
 
