@@ -2,6 +2,14 @@
 
 All notable changes to the SonarQube MCP Server project will be documented in this file.
 
+## [1.1.1] - 2025-08-22
+
+### Fixed
+- **Critical Fix**: Corrected MCP tool response format for `sonarqube_list_projects` and `sonarqube_get_project_metrics`
+- Removed double-wrapping of content arrays that caused "invalid chat message child" TSX component errors
+- Tools now return proper MCP response format compatible with VS Code/Copilot integration
+- Resolves integration issues with chat interfaces and MCP clients
+
 ## [1.1.0] - 2025-08-22
 
 ### Added
