@@ -2,6 +2,21 @@
 
 All notable changes to the SonarQube MCP Server project will be documented in this file.
 
+## [1.1.0] - 2025-08-22
+
+### Added
+- **New Tool: `get_project_repository`** - Get comprehensive git repository information for SonarQube projects
+  - Retrieves SCM links, project links (homepage, CI, issues)
+  - Extracts repository provider, organization, and name from URLs
+  - Supports GitHub, GitLab, Bitbucket, and Azure DevOps repositories
+  - Optional branch information retrieval
+  - ALM integration details (Enterprise feature)
+
+### Improved
+- Enhanced URL parsing for repository providers
+- Uses flexible matching ("github" vs "github.com") for better enterprise support
+- More robust provider detection for various Git hosting services
+
 ## [1.0.3] - 2025-08-22
 
 ### Fixed
@@ -77,7 +92,8 @@ src/
 │   ├── list-issues.ts
 │   ├── get-security-vulnerabilities.ts
 │   ├── get-quality-gate.ts
-│   └── get-analysis-history.ts
+│   ├── get-analysis-history.ts
+│   └── get-project-repository.ts      # New tool for repository information
 ├── types/sonarqube.ts                 # TypeScript type definitions
 └── utils/formatting.ts               # Utility functions
 
