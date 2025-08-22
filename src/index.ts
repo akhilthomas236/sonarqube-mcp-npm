@@ -87,7 +87,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   try {
     switch (name) {
-      case 'list_projects': {
+      case 'sonarqube_list_projects': {
         const client = createSonarQubeClient();
         const result = await listProjects(client, args || {});
         return {
@@ -100,9 +100,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         };
       }
 
-      case 'get_project_metrics': {
+      case 'sonarqube_get_project_metrics': {
         if (!args) {
-          throw new Error('Arguments required for get_project_metrics');
+          throw new Error('Arguments required for sonarqube_get_project_metrics');
         }
         const client = createSonarQubeClient();
         const result = await getProjectMetrics(client, args);
