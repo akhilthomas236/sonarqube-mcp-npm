@@ -196,7 +196,7 @@ export class SonarQubeClient {
         componentKeys: params.projectKey,
         ps: params.ps || 100, // Default page size
         p: params.p || 1,
-        additionalFields: 'rules,users,components',
+        additionalFields: 'rules,users,comments',
         facets: 'severities,types,rules,tags,assignees,languages',
         ...params,
       };

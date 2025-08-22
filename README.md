@@ -293,6 +293,65 @@ The server provides detailed error messages for common issues:
 - Authentication failures
 - Invalid parameters
 
+## Troubleshooting
+
+### "Server exited before responding to initialize request"
+
+If you encounter this error in VS Code or when using the MCP server, try these solutions:
+
+1. **Test the server directly first:**
+   ```bash
+   # Test if the server starts correctly
+   node dist/index.js
+   # Should output: "SonarQube MCP Server started successfully"
+   
+   # Test with an MCP initialize request
+   echo '{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "test", "version": "1.0.0"}}}' | node dist/index.js
+   ```
+
+2. **For VS Code integration issues:**
+   - Make sure the package is installed globally: `npm install -g mcp-sonarqube`
+   - Try using the full path instead of `npx`:
+     ```json
+     {
+       "servers": {
+         "sonarqube": {
+           "command": "node",
+           "args": ["/path/to/global/node_modules/mcp-sonarqube/dist/index.js"],
+           "env": {
+             "SONARQUBE_URL": "http://localhost:9000",
+             "SONARQUBE_TOKEN": "your-token"
+           }
+         }
+       }
+     }
+     ```
+   - Restart VS Code after changing the MCP configuration
+
+3. **For npx issues:**
+   - Clear npm cache: `npm cache clean --force`
+   - Reinstall the package: `npm uninstall -g mcp-sonarqube && npm install -g mcp-sonarqube`
+   - Check Node.js version (requires Node.js 18+)
+
+4. **Environment variable issues:**
+   - Ensure `SONARQUBE_URL` and `SONARQUBE_TOKEN` are properly set
+   - Test connection: `curl -u your-token: $SONARQUBE_URL/api/projects/search`
+
+### Network and Authentication Issues
+
+1. **Connection errors:**
+   - Verify SonarQube URL is accessible
+   - Check firewall settings
+   - Ensure SonarQube server is running
+
+2. **Authentication errors:**
+   - Verify token is valid and has appropriate permissions
+   - Check token expiration
+   - Ensure token has at least "Browse" permission on projects
+
+3. **SSL/TLS issues:**
+   - For self-signed certificates, you may need to set `NODE_TLS_REJECT_UNAUTHORIZED=0` (not recommended for production)
+
 ## Contributing
 
 1. Fork the repository

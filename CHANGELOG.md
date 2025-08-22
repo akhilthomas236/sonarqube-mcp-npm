@@ -2,6 +2,13 @@
 
 All notable changes to the SonarQube MCP Server project will be documented in this file.
 
+## [1.0.1] - 2025-08-22
+
+### Fixed
+- Fixed SonarQube API error with `additionalFields` parameter in issues/search endpoint
+- Changed invalid `components` field to `comments` in additionalFields parameter
+- Server now properly handles issue listing without API parameter errors
+
 ## [1.0.0] - 2025-08-10
 
 ### Added
