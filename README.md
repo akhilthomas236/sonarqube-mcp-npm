@@ -337,6 +337,20 @@ If you encounter this error in VS Code or when using the MCP server, try these s
    - Ensure `SONARQUBE_URL` and `SONARQUBE_TOKEN` are properly set
    - Test connection: `curl -u your-token: $SONARQUBE_URL/api/projects/search`
 
+### SonarQube API Parameter Errors
+
+If you encounter API errors related to invalid parameters:
+
+1. **"additionalFields components must be one of..."**
+   - This error has been fixed in version 1.0.2+
+   - Update to the latest version: `npm update -g mcp-sonarqube`
+   - The server now uses valid `additionalFields` values: `rules,users,comments`
+
+2. **Invalid parameter values:**
+   - Check that your SonarQube version supports the API endpoints being used
+   - Some parameters may have different valid values in different SonarQube versions
+   - Refer to your SonarQube instance's API documentation at: `{SONARQUBE_URL}/web_api`
+
 ### Network and Authentication Issues
 
 1. **Connection errors:**
