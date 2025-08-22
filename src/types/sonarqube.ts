@@ -361,3 +361,32 @@ export interface HistoricalAnalysisResponse {
     trendDirection: 'IMPROVING' | 'STABLE' | 'DEGRADING';
   };
 }
+
+export interface ProjectRepository {
+  projectKey: string;
+  projectName: string;
+  repository?: {
+    url?: string;
+    provider?: 'github' | 'gitlab' | 'bitbucket' | 'azure_devops' | 'other';
+    organization?: string;
+    name?: string;
+    mainBranch?: string;
+    branches?: string[];
+  };
+  alm?: {
+    provider: string;
+    url?: string;
+    identifier?: string;
+  };
+  links?: {
+    homepage?: string;
+    ci?: string;
+    issue?: string;
+    scm?: string;
+  };
+}
+
+export interface GetProjectRepositoryParams {
+  projectKey: string;
+  includeBranches?: boolean;
+}

@@ -37,6 +37,11 @@ import {
   getAnalysisHistoryHandler 
 } from './tools/get-analysis-history.js';
 
+import { 
+  getProjectRepositoryTool, 
+  getProjectRepositoryHandler 
+} from './tools/get-project-repository.js';
+
 // Create server instance
 const server = new Server(
   {
@@ -72,6 +77,7 @@ const tools = [
   getSecurityVulnerabilitiesTool,
   getQualityGateTool,
   getAnalysisHistoryTool,
+  getProjectRepositoryTool,
 ];
 
 // Handler for tool listing
@@ -166,6 +172,21 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           throw new Error('Arguments required for get_analysis_history');
         }
         const result = await getAnalysisHistoryHandler(args as any);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: result,
+            },
+          ],
+        };
+      }
+
+      case 'get_project_repository': {
+        if (!args) {
+          throw new Error('Arguments required for get_project_repository');
+        }
+        const result = await getProjectRepositoryHandler(args as any);
         return {
           content: [
             {

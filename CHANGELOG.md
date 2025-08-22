@@ -2,6 +2,14 @@
 
 All notable changes to the SonarQube MCP Server project will be documented in this file.
 
+## [1.0.3] - 2025-08-22
+
+### Fixed
+- Fixed tool name mapping in MCP server switch statement
+- Corrected `sonarqube_list_projects` tool recognition (was incorrectly mapped as `list_projects`)
+- Corrected `sonarqube_get_project_metrics` tool recognition (was incorrectly mapped as `get_project_metrics`)
+- Resolves "unknown tool" errors when using the MCP server
+
 ## [1.0.2] - 2025-08-22
 
 ### Fixed

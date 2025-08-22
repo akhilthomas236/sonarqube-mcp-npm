@@ -18,7 +18,9 @@ import {
   GetQualityGateParams,
   GetAnalysisHistoryParams,
   SonarQubeError,
-  MCPError
+  MCPError,
+  GetProjectRepositoryParams,
+  ProjectRepository
 } from '../types/sonarqube.js';
 
 export class SonarQubeClient {
@@ -404,6 +406,161 @@ export class SonarQubeClient {
     try {
       const response = await this.client.get('/system/status');
       return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Get project repository information including SCM details and project links
+   */
+  async getProjectRepository(params: GetProjectRepositoryParams): Promise<ProjectRepository> {
+    try {
+      const result: ProjectRepository = {
+        projectKey: params.projectKey,
+        projectName: params.projectKey, // Will be updated with actual name
+      };
+
+      // Get basic project information first
+      const projectResponse = await this.client.get('/projects/search', {
+        params: {
+          projects: params.projectKey,
+        },
+      });
+
+      if (projectResponse.data.components && projectResponse.data.components.length > 0) {
+        const project = projectResponse.data.components[0];
+        result.projectName = project.name || params.projectKey;
+      }
+
+      // Try to get project links
+      try {
+        const linksResponse = await this.client.get('/project_links/search', {
+          params: {
+            projectKey: params.projectKey,
+          },
+        });
+
+        if (linksResponse.data.links && linksResponse.data.links.length > 0) {
+          result.links = {};
+          
+          linksResponse.data.links.forEach((link: any) => {
+            const type = link.type?.toLowerCase();
+            const url = link.url;
+            
+            if (type && url) {
+              switch (type) {
+                case 'homepage':
+                  result.links!.homepage = url;
+                  break;
+                case 'ci':
+                  result.links!.ci = url;
+                  break;
+                case 'issue':
+                case 'issues':
+                  result.links!.issue = url;
+                  break;
+                case 'scm':
+                case 'sources':
+                  result.links!.scm = url;
+                  break;
+              }
+            }
+          });
+        }
+      } catch (linksError) {
+        // Links endpoint might not be available or accessible
+        console.error('Could not fetch project links:', linksError);
+      }
+
+      // Try to get repository information from project branches (if available)
+      if (params.includeBranches) {
+        try {
+          const branchesResponse = await this.client.get('/project_branches/list', {
+            params: {
+              project: params.projectKey,
+            },
+          });
+
+          if (branchesResponse.data.branches && branchesResponse.data.branches.length > 0) {
+            if (!result.repository) {
+              result.repository = {};
+            }
+            
+            result.repository.branches = branchesResponse.data.branches.map((branch: any) => branch.name);
+            
+            // Find the main branch
+            const mainBranch = branchesResponse.data.branches.find((branch: any) => branch.isMain);
+            if (mainBranch) {
+              result.repository.mainBranch = mainBranch.name;
+            }
+          }
+        } catch (branchError) {
+          // Branches endpoint might not be available in Community Edition
+          console.error('Could not fetch project branches:', branchError);
+        }
+      }
+
+      // Try to extract repository information from SCM links
+      if (result.links?.scm) {
+        if (!result.repository) {
+          result.repository = {};
+        }
+        
+        result.repository.url = result.links.scm;
+        
+        // Parse provider from URL
+        const scmUrl = result.links.scm.toLowerCase();
+        if (scmUrl.includes('github')) {
+          result.repository.provider = 'github';
+          const match = result.links.scm.match(/github[^\/]*[\/:]([^\/]+)\/([^\/\.]+)/);
+          if (match && match[1] && match[2]) {
+            result.repository.organization = match[1];
+            result.repository.name = match[2];
+          }
+        } else if (scmUrl.includes('gitlab')) {
+          result.repository.provider = 'gitlab';
+          const match = result.links.scm.match(/gitlab[^\/]*[\/:]([^\/]+)\/([^\/\.]+)/);
+          if (match && match[1] && match[2]) {
+            result.repository.organization = match[1];
+            result.repository.name = match[2];
+          }
+        } else if (scmUrl.includes('bitbucket')) {
+          result.repository.provider = 'bitbucket';
+          const match = result.links.scm.match(/bitbucket[^\/]*[\/:]([^\/]+)\/([^\/\.]+)/);
+          if (match && match[1] && match[2]) {
+            result.repository.organization = match[1];
+            result.repository.name = match[2];
+          }
+        } else if (scmUrl.includes('dev.azure.com') || scmUrl.includes('visualstudio.com')) {
+          result.repository.provider = 'azure_devops';
+        } else {
+          result.repository.provider = 'other';
+        }
+      }
+
+      // Try to get ALM integration information (SonarQube Enterprise feature)
+      try {
+        const almResponse = await this.client.get('/alm_integrations/search_projects', {
+          params: {
+            projectKey: params.projectKey,
+          },
+        });
+
+        if (almResponse.data && almResponse.data.almIntegration) {
+          result.alm = {
+            provider: almResponse.data.almIntegration.alm || 'unknown',
+            url: almResponse.data.almIntegration.url,
+            identifier: almResponse.data.almIntegration.repository,
+          };
+        }
+      } catch (almError) {
+        // ALM integration endpoint might not be available or accessible
+        console.error('Could not fetch ALM integration:', almError);
+      }
+
+      return result;
+      
     } catch (error) {
       throw error;
     }
